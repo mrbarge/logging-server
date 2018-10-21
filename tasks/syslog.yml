@@ -1,0 +1,41 @@
+---
+
+- name: enable remote udp syslog reception
+  lineinfile:
+    dest: /etc/rsyslog.conf
+    regexp: '^#\$UDPServerRun 514'
+    line: '$UDPServerRun 514'
+    backrefs: yes
+    state: present
+  become: yes
+
+- name: enable remote udp syslog reception
+  lineinfile:
+    dest: /etc/rsyslog.conf
+    regexp: '^#\$ModLoad imudp'
+    line: '$ModLoad imudp'
+    backrefs: yes
+    state: present
+  become: yes
+  notify: restart rsyslog
+
+- name: create host log dir
+  file:
+    path: /var/log/hosts
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+    seuser: system_u
+    serole: object_r
+    setype: var_log_t
+
+- name: distribute rsyslog conf
+  copy:
+    src: custom-log.conf
+    dest: /etc/rsyslog.d/custom-log.conf
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
+  notify: restart rsyslog

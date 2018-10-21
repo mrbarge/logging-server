@@ -1,0 +1,11 @@
+---
+
+- name: uncomment listen line
+  lineinfile:
+    dest: /etc/audit/auditd.conf
+    regexp: '^##tcp_listen_port.*'
+    line: 'tcp_listen_port = 60'
+    backrefs: yes
+    state: present
+  become: yes
+  notify: restart auditd

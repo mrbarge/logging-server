@@ -1,0 +1,33 @@
+---
+
+- name: install snmptrapd
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - net-snmp
+    - net-snmp-utils
+
+- name: enable snmptrapd service
+  service:
+    name: snmptrapd
+    enabled: yes
+
+- name: tell snmptrapd to log to syslog
+  lineinfile:
+    dest: /etc/sysconfig/snmptrapd
+    regexp: '^OPTIONS=.*'
+    line: 'OPTIONS="-Ls4"'
+    state: present
+  become: yes
+
+- name: deploy custom config
+  copy:
+    src: snmptrapd.conf
+    dest: /etc/snmp/snmptrapd.conf
+    mode: 0644
+    owner: root
+    group: root
+  become: yes
+  notify: restart snmptrapd
+

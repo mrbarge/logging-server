@@ -1,0 +1,6 @@
+---
+# tasks file for lmaserver
+
+- include_tasks: audit.yml
+- include_tasks: snmp.yml
+- include_tasks: syslog.yml

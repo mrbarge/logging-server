@@ -1,0 +1,15 @@
+---
+# handlers file for lmaserver
+
+- name: restart auditd
+  command: service auditd restart
+
+- name: restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+
+- name: restart snmptrapd
+  service:
+    name: snmptrapd
+    state: restarted
